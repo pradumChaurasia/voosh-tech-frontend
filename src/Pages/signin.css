@@ -83,3 +83,14 @@
 .login-text span {
     margin: 0 0.25rem;
 }
+
+
+@media screen and (max-width: 500px) {
+    .login-sub-container{
+        width: 100%;
+    }
+
+    .login-heading{
+        margin-right: 0px;
+    }
+}
