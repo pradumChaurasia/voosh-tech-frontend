@@ -15,7 +15,6 @@ const Header = () => {
         localStorage.removeItem('token');
         navigate('/signin');
     };
-    console.log(user)
     return (
         <div className='header'>
             <div>

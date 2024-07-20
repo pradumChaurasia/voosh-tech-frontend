@@ -163,6 +163,18 @@
 
 }
 
+.modal-delete {
+    background: white;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    border-radius: 8px;
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+
+}
+
 .modal-title {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -229,7 +241,18 @@
     border: none;
     border-radius: 5px;
     background-color: rgb(127 123 123 / 19%);
-    color: darkgray;
+    color: rgb(109, 107, 107);
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.modal-button11{
+    margin-left: 10px;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(245, 104, 104);
+    color: #fff;
     font-size: 15px;
     cursor: pointer;
 }
@@ -241,6 +264,17 @@
     border-radius: 5px;
     background-color: #12121233;
     color: darkgray;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.modal-button22 {
+    margin-left: 10px;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: 	#808080;
+    color: #fff;
     font-size: 15px;
     cursor: pointer;
 }

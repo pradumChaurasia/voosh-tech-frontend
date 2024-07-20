@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './Dashboard.css'
 import Modal from 'react-modal';
@@ -18,6 +19,10 @@ const Dashboard = () => {
   const [taskToEdit, setTaskToEdit] = useState(null);
   const [viewTask, setViewTask] = useState(null);
   const [isViewDetailsModalOpen, setIsViewDetailsModalOpen] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
+
 
   useEffect(() => {
 
@@ -70,12 +75,27 @@ const Dashboard = () => {
         },
       });
       setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+      toast.success("Task Deleted Successfully")
     } catch (error) {
       console.error(error.message);
     }
   };
 
+  const confirmDeleteTask = (id) => {
+    setTaskToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
   const handleCreateTask = async () => {
+    if (!newTask.title.trim()) {
+      toast.error("Title cannot be empty");
+      return;
+    }
+  
+    if (!newTask.description.trim()) {
+      toast.error("Description cannot be empty");
+      return;
+    }
     try {
       const storedToken = JSON.parse(localStorage.getItem('token'));
       const response = await axios.post('https://voosh-tech-backend.vercel.app/api/user/createTask', newTask, {
@@ -87,12 +107,22 @@ const Dashboard = () => {
       setTasks((prevTasks) => [...prevTasks, response.data]);
       setIsModalOpen(false);
       setNewTask({ title: '', description: '', status: 'TODO' });
+      toast.success("Task Created Successfully");
     } catch (error) {
       toast.error(error.message);
     }
   };
 
   const handleEditTask = async () => {
+    if (!taskToEdit.title.trim()) {
+      toast.error("Title cannot be empty");
+      return;
+    }
+  
+    if (!taskToEdit.description.trim()) {
+      toast.error("Description cannot be empty");
+      return;
+    }
     try {
       const storedToken = JSON.parse(localStorage.getItem('token'));
       const response = await axios.put(`https://voosh-tech-backend.vercel.app/api/user/updateTask/${taskToEdit._id}`, taskToEdit, {
@@ -106,6 +136,7 @@ const Dashboard = () => {
       );
       setIsEditModalOpen(false);
       setTaskToEdit(null);
+      toast.success("Task Edited Successfully")
     } catch (error) {
       toast.error(error.message);
     }
@@ -138,13 +169,14 @@ const Dashboard = () => {
     <div className="task-card">
       <div className="task-card-info">
         <h4>{task.title}</h4>
-        <p>{task.description}</p>
+        <p>{task.description.length > 40 ? `${task.description.substring(0, 100)}...` : task.description}</p>
       </div>
       <p>Created: {new Date(task.createdAt).toLocaleString()}</p>
 
       <div className='event-buttons'>
 
-        <button className="delete-button" onClick={() => handleDeleteTask(task._id)}>Delete</button>
+        {/* <button className="delete-button" onClick={() => handleDeleteTask(task._id)}>Delete</button> */}
+        <button className="delete-button" onClick={() => confirmDeleteTask(task._id)}>Delete</button>
         <button className="edit-button" onClick={() => { setTaskToEdit(task); setIsEditModalOpen(true) }}>Edit</button>
         <button className='view-button' onClick={() => { setViewTask(task); setIsViewDetailsModalOpen(true) }}>View Details</button>
       </div>
@@ -179,6 +211,7 @@ const Dashboard = () => {
   );
 
   return (
+    <>
     <div className="dashboard">
       <div className='dashboard-add-task'>
 
@@ -231,7 +264,7 @@ const Dashboard = () => {
         </div>
         <div className="modal-buttons">
           <button className='modal-button1' onClick={handleCreateTask}>Save</button>
-          <button className='modal-button2' onClick={() => setIsModalOpen(false)}>Cancel</button>
+          <button className='modal-button22' onClick={() => setIsModalOpen(false)}>Cancel</button>
         </div>
       </Modal>
 
@@ -265,16 +298,16 @@ const Dashboard = () => {
         <div className="modal-content">
           {viewTask && (
             <div className="modal-content">
-              <p style={{marginBottom:'15px'}}><strong>Title:</strong> <b>{viewTask.title}</b></p>
-              <p style={{ display: 'flex' , gap:'7px', marginBottom:'15px'}}>
+              <p style={{ marginBottom: '15px' }}><strong>Title:</strong> <b>{viewTask.title}</b></p>
+              <p style={{ display: 'flex', gap: '7px', marginBottom: '15px' }}>
                 <p style={{ color: '	#808080' }}>Description:</p>
-                <p style={{color:'#A9A9A9'}}>
+                <p style={{ color: '#696969' }}>
                   {viewTask.description}
                 </p>
               </p>
-              <p style={{ display: 'flex' , gap:'7px', marginBottom:'15px'}}>
+              <p style={{ display: 'flex', gap: '7px', marginBottom: '15px' }}>
                 <p style={{ color: '#808080' }}>Created at:</p>
-                <p style={{color:'#A9A9A9'}}>
+                <p style={{ color: '#696969' }}>
                   {new Date(viewTask.createdAt).toLocaleString()}
                 </p>
               </p>
@@ -286,7 +319,24 @@ const Dashboard = () => {
           <button className='modal-button3' onClick={() => setIsViewDetailsModalOpen(false)}>Close</button>
         </div>
       </Modal>
+
+      <Modal isOpen={isDeleteModalOpen} onRequestClose={() => setIsDeleteModalOpen(false)} className="modal-delete" overlayClassName="overlay" style={{ height: '30vh' }}>
+        <h2 style={{ marginBottom: '12px' }}>Confirm Delete</h2>
+        <div className="modal-content">
+          <p>Are you sure you want to delete this task?</p>
+        </div>
+        <div className="modal-buttons">
+          <button className='modal-button11' onClick={() => {
+            handleDeleteTask(taskToDelete);
+            setIsDeleteModalOpen(false);
+          }}>Yes</button>
+          <button className='modal-button22' onClick={() => setIsDeleteModalOpen(false)}>No</button>
+        </div>
+      </Modal>
+
     </div>
+    <ToastContainer />
+    </>
   )
 }
 
