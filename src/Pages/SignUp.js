@@ -71,6 +71,7 @@ const SignUp = () => {
 
             try {
                 const response = await axios.post(`https://voosh-tech-backend.vercel.app/api/register`, {
+                // const response = await axios.post(`http://localhost:3000/api/register`, {
                     email: formValues.email,
                     password: formValues.password,
                     name: `${formValues.firstName} ${formValues.lastName}`
@@ -104,6 +105,7 @@ const SignUp = () => {
         const toastId = toast.loading('Loading...');
         try {
             const res = await axios.post('https://voosh-tech-backend.vercel.app/api/google-login', {
+            // const res = await axios.post('http://localhost:3000/api/google-login', {
                 tokenId: credential,
             });
             if (res.data) {
