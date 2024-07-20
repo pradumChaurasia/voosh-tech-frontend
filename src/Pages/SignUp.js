@@ -5,8 +5,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../redux/actions/userActions';
 
 const SignUp = () => {
+    const dispatch = useDispatch()
     const [formValues, setFormValues] = useState({
         firstName: "",
         lastName: "",
@@ -66,7 +69,7 @@ const SignUp = () => {
 
     const handleSignUp = async () => {
         const { isValid, errors } = validate(formValues);
-        const toastId = toast.loading('Loading...');
+
         if (isValid) {
 
             try {
@@ -77,32 +80,31 @@ const SignUp = () => {
                     name: `${formValues.firstName} ${formValues.lastName}`
                 });
 
-                toast.update(toastId, {
-                    render: "User Registered Successfully!",
-                    type: "success",
-                    isLoading: false,
-                    autoClose: 3000
-                });
 
-                navigate('/signin');
-            } catch (error) {
-                toast.update(toastId, {
-                    render: error.response.data.message || "Registration failed!",
-                    type: "error",
-                    isLoading: false,
+                const { token, user } = response.data;
+                localStorage.setItem("token", JSON.stringify(token));
+                dispatch(loginSuccess({ token, ...user }));
+
+                toast.success("User Registered Successfully!", {
                     autoClose: 3000
-                });
+                  });
+
+                navigate('/');
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Registration failed!", {
+                    autoClose: 3000
+                  });
             }
         } else {
             const error = Object.values(errors);
-            toast.error(error[0] ? error[0] : "All fields are required",{
-                id: toastId,
-            });
+            toast.error(error[0] ? error[0] : "All fields are required", {
+                autoClose: 3000
+              });
         }
     }
     const handleGoogleSuccess = async (response) => {
         const { credential } = response;
-        const toastId = toast.loading('Loading...');
+        
         try {
             const res = await axios.post('https://voosh-tech-backend.vercel.app/api/google-login', {
             // const res = await axios.post('http://localhost:3000/api/google-login', {
@@ -110,16 +112,17 @@ const SignUp = () => {
             });
             if (res.data) {
                 localStorage.setItem("token", JSON.stringify(res.data.token));
+                dispatch(loginSuccess({ token: res.data.token, ...res.data.user }));
                 toast.success("Google Login Successfully!", {
-                    id: toastId,
-                });
+                    autoClose: 3000
+                  });
                 navigate('/');
             }
         } catch (error) {
             console.log("error : ", error);
             toast.error("Error in Google Login", {
-                id: toastId,
-            });
+                autoClose: 3000
+              });
         }
     };
 

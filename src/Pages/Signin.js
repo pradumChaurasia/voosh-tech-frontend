@@ -47,7 +47,7 @@ const Signin = () => {
     };
     const handleLogin = async () => {
         const { isValid, errors } = validate(formValues);
-        const toastId = toast.loading('Loading...');
+        
         if (isValid) {
             try {
                 const response = await axios.post(`https://voosh-tech-backend.vercel.app/api/login`, {
@@ -60,27 +60,26 @@ const Signin = () => {
                     localStorage.setItem("token", JSON.stringify(token));
                     dispatch(loginSuccess({ token, ...user }));
                     toast.success("Login Successfully!", {
-                        id: toastId,
+                        autoClose: 3000
                     });
                     navigate('/');
                 }
             } catch (error) {
                 console.log("error : ", error);
                 toast.error("Error in Login", {
-                    id: toastId,
+                   autoClose: 3000
                 });
             }
         } else {
             const error = Object.values(errors);
-            toast.error(error[0] ? error[0] : "All fields are required",{
-                id: toastId,
-            });
+            toast.error(error[0] ? error[0] : "All fields are required", {
+                autoClose: 3000
+              });
         }
     };
 
     const handleGoogleSuccess = async (response) => {
         const { credential } = response;
-        const toastId = toast.loading('Loading...');
         try {
             const res = await axios.post('https://voosh-tech-backend.vercel.app/api/google-login', {
             // const res = await axios.post('http://localhost:3000/api/google-login', {
@@ -92,15 +91,15 @@ const Signin = () => {
                 localStorage.setItem("token", JSON.stringify(token));
                 dispatch(loginSuccess({ token, ...user }));
                 toast.success("Google Login Successfully!", {
-                    id: toastId,
-                });
+                    autoClose: 3000
+                  });
                 navigate('/');
             }
         } catch (error) {
             console.log("error : ", error);
             toast.error("Error in Google Login", {
-                id: toastId,
-            });
+                autoClose: 3000
+              });
         }
     };
 
