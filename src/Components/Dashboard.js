@@ -24,7 +24,8 @@ const Dashboard = () => {
     const fetchTask = async () => {
       try {
         const storedToken = JSON.parse(localStorage.getItem('token'));
-        const response = await axios.get("http://localhost:3000/api/user/getTasks", {
+        const response = await axios.get("https://voosh-tech-backend.vercel.app/api/user/getTasks", {
+        // const response = await axios.get("http://localhost:3000/api/user/getTasks", {
           headers: {
             Authorization: `Bearer ${storedToken}`,
           },
@@ -41,7 +42,8 @@ const Dashboard = () => {
   const handleMoveTask = async (task, status) => {
     try {
       const storedToken = JSON.parse(localStorage.getItem('token'));
-      await axios.put(`http://localhost:3000/api/user/updateTask/${task._id}`, { ...task, status }, {
+      await axios.put(`https://voosh-tech-backend.vercel.app/api/user/updateTask/${task._id}`, { ...task, status }, {
+      // await axios.put(`http://localhost:3000/api/user/updateTask/${task._id}`, { ...task, status }, {
         headers: {
           Authorization: `Bearer ${storedToken}`,
         },
@@ -61,7 +63,8 @@ const Dashboard = () => {
   const handleDeleteTask = async (id) => {
     try {
       const storedToken = JSON.parse(localStorage.getItem('token'));
-      await axios.delete(`http://localhost:3000/api/user/deleteTask/${id}`, {
+      await axios.delete(`https://voosh-tech-backend.vercel.app/api/user/deleteTask/${id}`, {
+      // await axios.delete(`http://localhost:3000/api/user/deleteTask/${id}`, {
         headers: {
           Authorization: `Bearer ${storedToken}`,
         },
@@ -75,7 +78,8 @@ const Dashboard = () => {
   const handleCreateTask = async () => {
     try {
       const storedToken = JSON.parse(localStorage.getItem('token'));
-      const response = await axios.post('http://localhost:3000/api/user/createTask', newTask, {
+      const response = await axios.post('https://voosh-tech-backend.vercel.app/api/user/createTask', newTask, {
+      // const response = await axios.post('http://localhost:3000/api/user/createTask', newTask, {
         headers: {
           Authorization: `Bearer ${storedToken}`,
         },
@@ -91,7 +95,8 @@ const Dashboard = () => {
   const handleEditTask = async () => {
     try {
       const storedToken = JSON.parse(localStorage.getItem('token'));
-      const response = await axios.put(`http://localhost:3000/api/user/updateTask/${taskToEdit._id}`, taskToEdit, {
+      const response = await axios.put(`https://voosh-tech-backend.vercel.app/api/user/updateTask/${taskToEdit._id}`, taskToEdit, {
+      // const response = await axios.put(`http://localhost:3000/api/user/updateTask/${taskToEdit._id}`, taskToEdit, {
         headers: {
           Authorization: `Bearer ${storedToken}`,
         },

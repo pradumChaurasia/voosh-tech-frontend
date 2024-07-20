@@ -50,7 +50,8 @@ const Signin = () => {
         const toastId = toast.loading('Loading...');
         if (isValid) {
             try {
-                const response = await axios.post(`http://localhost:3000/api/login`, {
+                const response = await axios.post(`https://voosh-tech-backend.vercel.app/api/login`, {
+                // const response = await axios.post(`http://localhost:3000/api/login`, {
                     email: formValues.email,
                     password: formValues.password,
                 });
@@ -81,7 +82,8 @@ const Signin = () => {
         const { credential } = response;
         const toastId = toast.loading('Loading...');
         try {
-            const res = await axios.post('http://localhost:3000/api/google-login', {
+            const res = await axios.post('https://voosh-tech-backend.vercel.app/api/google-login', {
+            // const res = await axios.post('http://localhost:3000/api/google-login', {
                 tokenId: credential,
             });
            
